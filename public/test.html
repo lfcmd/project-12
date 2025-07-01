@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试页面</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 { color: #333; }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .btn {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 4px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>API测试页面</h1>
+  
+  <div class="card">
+    <h2>环境变量测试</h2>
+    <button class="btn" id="testEnv">测试环境变量</button>
+    <pre id="envResult">点击按钮测试...</pre>
+  </div>
+  
+  <div class="card">
+    <h2>API测试</h2>
+    <button class="btn" id="testApi">测试生成API</button>
+    <pre id="apiResult">点击按钮测试...</pre>
+  </div>
+
+  <script>
+    document.getElementById('testEnv').addEventListener('click', async () => {
+      const result = document.getElementById('envResult');
+      result.textContent = '请求中...';
+      
+      try {
+        const response = await fetch('/api/test');
+        const data = await response.json();
+        result.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        result.textContent = `错误: ${error.message}`;
+      }
+    });
+    
+    document.getElementById('testApi').addEventListener('click', async () => {
+      const result = document.getElementById('apiResult');
+      result.textContent = '请求中...';
+      
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: '测试',
+            style: 'LINEART',
+            numImages: 1
+          })
+        });
+        const data = await response.json();
+        result.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        result.textContent = `错误: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html> 
