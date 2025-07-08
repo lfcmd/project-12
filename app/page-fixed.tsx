@@ -97,12 +97,12 @@ const t = {
       title1: 'Hand',
       title2: 'Draw',
       title3: 'AI',
-      subtitle: '专门的手绘风格AI生成平台，30秒生成专业手绘作品。支持PSD分层导出，附带商用许可证。',
+      subtitle: '专门的手绘风格AI生成平台，30秒生成专业手绘作品。专业商用许可证。',
       startButton: '开始手绘创作',
       stats: {
         styles: '手绘风格',
         speed: '生成速度',
-        export: 'PSD导出',
+        export: 'PNG导出',
         license: '商用许可'
       },
       stylesTitle: '11种专业手绘风格',
@@ -114,8 +114,8 @@ const t = {
           desc: '告别长时间等待，专业手绘作品30秒内完成，提升创作效率'
         },
         {
-          title: 'PSD分层导出',
-          desc: '支持Photoshop分层文件导出，方便后期编辑和专业设计工作流程'
+          title: '高清PNG导出',
+          desc: '支持高清PNG文件导出，方便后期编辑和专业设计工作流程'
         },
         {
           title: '手绘风格训练',
@@ -161,7 +161,7 @@ const t = {
       loadMore: '加载更多手绘作品'
     },
     footer: {
-      description: '专门的手绘风格AI生成平台，30秒生成专业手绘作品，支持PSD导出和商用许可。为学生、艺术家、游戏工作室和营销团队而设计。',
+      description: '专门的手绘风格AI生成平台，30秒生成专业手绘作品，支持PNG导出和商用许可。为学生、艺术家、游戏工作室和营销团队而设计。',
       product: {
         title: '产品功能',
         features: '功能特色',
@@ -206,12 +206,12 @@ const t = {
       title1: 'Hand',
       title2: 'Draw',
       title3: 'AI',
-      subtitle: 'Specialized hand-drawn AI platform. Generate professional hand-drawn artworks in 30 seconds with PSD export and commercial license.',
+      subtitle: 'Specialized hand-drawn AI platform. Generate professional hand-drawn artworks in 30 seconds with PNG export and commercial license.',
       startButton: 'Start Hand Drawing',
       stats: {
         styles: 'Hand Styles',
         speed: 'Gen Speed',
-        export: 'PSD Export',
+        export: 'PNG Export',
         license: 'Commercial'
       },
       stylesTitle: '11 Professional Hand-drawn Styles',
@@ -223,8 +223,8 @@ const t = {
           desc: 'No more long waits. Professional hand-drawn artworks completed in 30 seconds for improved productivity'
         },
         {
-          title: 'PSD Layer Export',
-          desc: 'Photoshop layered file export supported for easy post-editing and professional design workflows'
+          title: 'High-Quality PNG Export',
+          desc: 'High-quality PNG file export supported for easy post-editing and professional design workflows'
         },
         {
           title: 'Hand-drawn Training',
@@ -270,7 +270,7 @@ const t = {
       loadMore: 'Load More Hand-drawn Works'
     },
     footer: {
-      description: 'Specialized hand-drawn AI platform. Generate professional hand-drawn artworks in 30 seconds with PSD export and commercial license. Designed for students, artists, game studios and marketing teams.',
+              description: 'Specialized hand-drawn AI platform. Generate professional hand-drawn artworks in 30 seconds with PNG export and commercial license. Designed for students, artists, game studios and marketing teams.',
       product: {
         title: 'Product',
         features: 'Features',
@@ -493,7 +493,7 @@ export default function Home() {
       color: 'from-slate-600 via-gray-700 to-black',
       icon: Pen,
       resolution: '2048²',
-      formats: ['PNG', 'PSD']
+      formats: ['PNG', 'JPG']
     },
     { 
       ...stylesData[language as keyof typeof stylesData][1],
@@ -521,7 +521,7 @@ export default function Home() {
       color: 'from-gray-400 via-slate-500 to-zinc-600',
       icon: Edit,
       resolution: '2048²',
-      formats: ['PNG', 'PSD']
+      formats: ['PNG', 'JPG']
     },
     { 
       ...stylesData[language as keyof typeof stylesData][5],

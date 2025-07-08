@@ -86,10 +86,10 @@ const t = {
     stats: {
       styles: 'Hand Styles',
       speed: 'Gen Speed',
-      export: 'PSD Export',
+      export: '4K Resolution',
       license: 'Commercial'
     },
-    stylesTitle: '11 Professional Hand-drawn Styles',
+    stylesTitle: '10+ Professional Hand-drawn Styles',
     galleryTitle: '作品画廊',
     gallerySubtitle: '探索由我们的创作者社区创作的精美手绘艺术作品',
     featuresTitle: 'Built for Creators',
@@ -100,8 +100,8 @@ const t = {
         desc: 'No more long waits. Professional hand-drawn artworks completed in 30 seconds for improved productivity'
       },
       {
-        title: 'PSD Layer Export',
-        desc: 'Photoshop layered file export supported for easy post-editing and professional design workflows'
+        title: 'Multiple Aspect Ratios',
+        desc: 'Supports square and landscape aspect ratios to fit different social media and design needs.'
       },
       {
         title: 'Hand-drawn Training',
@@ -136,6 +136,32 @@ const t = {
   pricing: {
     title: 'Hand Draw Pricing Plans',
     subtitle: 'Choose the right plan for your professional hand-drawing journey'
+  },
+  faq: {
+    title: 'Frequently Asked Questions',
+    subtitle: 'If you have any other questions, feel free to contact us.',
+    questions: [
+      {
+        q: 'What is HandDraw.AI?',
+        a: 'HandDraw.AI is a specialized AI generation platform for hand-drawn styles. We use advanced models trained on real hand-drawn artworks to provide artists, designers, and creative enthusiasts with high-quality, uniquely artistic hand-drawn images.'
+      },
+      {
+        q: 'Is HandDraw.AI free?',
+        a: 'We offer a free trial plan that allows users to perform a limited number of generations per day. For professional users who need more features and higher usage, we offer affordable Pro and Enterprise plans.'
+      },
+      {
+        q: 'How is HandDraw.AI different from other AI art generators?',
+        a: 'Our core distinction lies in our focus on "hand-drawn." Unlike general models that pursue photorealism, our models are specialized in simulating the texture, strokes, and warmth of various hand-drawn styles, such as watercolor, pencil sketch, and Ghibli style.'
+      },
+      {
+        q: 'Can I use the generated images for commercial purposes?',
+        a: 'Yes, all images generated through our paid plans (Pro and Enterprise) include a full commercial license, allowing you to use them for personal and commercial projects without copyright concerns.'
+      },
+      {
+        q: 'How long does it take to generate an image?',
+        a: 'Our optimized architecture ensures fast generation. On the Pro plan, most images can be completed in about 30 seconds, so your creativity doesn\'t have to wait.'
+      }
+    ]
   },
   gallery: {
     title: 'Hand-drawn Gallery',
@@ -184,12 +210,6 @@ function HomeImageGallery() {
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-              {t.home.galleryTitle}
-            </span>
-          </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">{t.home.gallerySubtitle}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {homeGalleryArtworks.map((artwork, index) => (
@@ -199,23 +219,9 @@ function HomeImageGallery() {
                   src={artwork.imageUrl}
                   alt={artwork.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                 <div className="absolute top-3 left-3">
-                  <span className="bg-black/50 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full">
-                    {artwork.style}
-                  </span>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="text-lg font-bold text-white mb-2">{artwork.title}</h3>
-                <div className="flex items-center justify-between text-sm">
-                  <p className="text-gray-400">{artwork.artist}</p>
-                   <div className="flex space-x-2 text-gray-500">
-                      <Heart className="w-4 h-4 hover:text-red-400 transition-colors" />
-                      <Download className="w-4 h-4 hover:text-cyan-400 transition-colors" />
-                    </div>
-                </div>
               </div>
             </div>
           ))}
@@ -341,62 +347,6 @@ function Navigation({ language, setLanguage, currentLang, activeTab, setActiveTa
   );
 }
 
-// PSD Export Handler Function
-async function handlePsdExport(
-  imageUrl: string,
-  style: string,
-  prompt: string,
-  setIsExporting: (exporting: boolean) => void,
-  setExportError: (error: string | null) => void
-) {
-  setIsExporting(true);
-  setExportError(null);
-
-  try {
-    console.log('发送PSD导出请求:', { imageUrl, style, prompt });
-    
-    const response = await fetch('/api/export-psd', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        imageUrl,
-        style,
-        prompt,
-        layerSeparation: true
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-    }
-
-    // 获取PSD文件
-    const blob = await response.blob();
-    
-    // 创建下载链接
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = `HandDraw-${style}-${Date.now()}.psd`;
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-
-    console.log('PSD导出成功');
-  } catch (error) {
-    console.error('PSD导出错误:', error);
-    const errorMessage = error instanceof Error ? error.message : 'PSD导出失败，请重试';
-    setExportError(errorMessage);
-  } finally {
-    setIsExporting(false);
-  }
-}
-
 // Generate Handler Function
 async function handleGenerate(
   prompt: string,
@@ -469,6 +419,79 @@ async function handleGenerate(
   }
 }
 
+function HowItWorks() {
+  const steps = [
+    {
+      icon: Wand2,
+      title: '1. Choose a Style',
+      desc: 'Select from our 11+ professionally trained hand-drawn styles to find the perfect one for your idea.'
+    },
+    {
+      icon: Edit,
+      title: '2. Describe Your Vision',
+      desc: 'Describe the scene you want to create in detail. The more specific you are, the more accurate and stunning the AI\'s interpretation will be.'
+    },
+    {
+      icon: Download,
+      title: '3. Generate and Download',
+      desc: 'Click the "Start Hand Drawing" button, and the AI will create your artwork in about 30 seconds. You can then preview and download the high-resolution result.'
+    }
+  ];
+
+  return (
+    <section className="py-20 bg-gray-900/20">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400 bg-clip-text text-transparent">
+              Start Your Creative Journey in Three Steps
+            </span>
+          </h2>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Turn your ideas into unique hand-drawn art in just a few seconds.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          {steps.map((step, index) => (
+            <div key={index} className="text-center">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center">
+                <step.icon className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">{step.title}</h3>
+              <p className="text-gray-400 text-lg leading-relaxed">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FaqSection() {
+  return (
+    <section className="py-20">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <span className="bg-gradient-to-r from-pink-400 via-rose-400 to-orange-400 bg-clip-text text-transparent">
+              {t.faq.title}
+            </span>
+          </h2>
+          <p className="text-xl text-gray-400">{t.faq.subtitle}</p>
+        </div>
+        <div className="space-y-8">
+          {t.faq.questions.map((item, index) => (
+            <div key={index} className="bg-gray-900/30 backdrop-blur-sm p-6 rounded-2xl border border-gray-800">
+              <h3 className="text-xl font-bold text-white mb-4">{item.q}</h3>
+              <p className="text-gray-400 leading-relaxed">{item.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState('home');
   const [selectedStyle, setSelectedStyle] = useState('WATERCOLOR');
@@ -480,8 +503,6 @@ export default function Home() {
   const [imageSize, setImageSize] = useState('1024x1024');
   const [numImages, setNumImages] = useState(1);
   const [quality, setQuality] = useState('standard');
-  const [isExporting, setIsExporting] = useState(false);
-  const [exportError, setExportError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
   // Remove language state - app is now English only
@@ -492,7 +513,7 @@ export default function Home() {
       color: 'from-slate-600 via-gray-700 to-black',
       icon: Pen,
       resolution: '2048²',
-      formats: ['PNG', 'PSD']
+      formats: ['PNG']
     },
     { 
       ...stylesData[1],
@@ -520,7 +541,7 @@ export default function Home() {
       color: 'from-gray-400 via-slate-500 to-zinc-600',
       icon: Edit,
       resolution: '2048²',
-      formats: ['PNG', 'PSD']
+      formats: ['PNG']
     },
     { 
       ...stylesData[5],
@@ -633,7 +654,7 @@ export default function Home() {
                 <div className="text-gray-400">{currentLang.home.stats.speed}</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-pink-400 mb-2">PSD</div>
+                <div className="text-4xl font-bold text-pink-400 mb-2">4K</div>
                 <div className="text-gray-400">{currentLang.home.stats.export}</div>
               </div>
               <div className="text-center">
@@ -646,6 +667,8 @@ export default function Home() {
 
             <HomeImageGallery />
 
+            <HowItWorks />
+            
             {/* Styles Section */}
             <section className="py-20">
               <div className="max-w-7xl mx-auto px-4">
@@ -694,6 +717,8 @@ export default function Home() {
                 </div>
               </div>
             </section>
+
+            <FaqSection />
           </main>
         );
       case 'generate':
@@ -764,17 +789,99 @@ export default function Home() {
                     {/* Size Selection */}
                     <div className="mb-6">
                       <label className="block text-white font-bold mb-3">{currentLang.generate.sizeLabel}</label>
-                      <select
-                        value={imageSize}
-                        onChange={(e) => setImageSize(e.target.value)}
-                        className="w-full bg-gray-800/50 border border-gray-700 rounded-2xl px-4 py-3 text-white focus:border-violet-500 focus:outline-none"
-                      >
-                        <option value="512x512">512×512</option>
-                        <option value="1024x1024">1024×1024</option>
-                        <option value="1536x1536">1536×1536</option>
-                        <option value="1024x1792">1024×1792 (竖版)</option>
-                        <option value="1792x1024">1792×1024 (横版)</option>
-                      </select>
+                      <div className="space-y-3">
+                        <div className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            id="square-aspect"
+                            checked={['1024x1024', '1536x1536'].includes(imageSize)}
+                            onChange={(e) => {
+                              if (e.target.checked) setImageSize('1024x1024');
+                            }}
+                            className="w-4 h-4 text-violet-600 bg-gray-800 border-gray-700 rounded focus:ring-violet-500 focus:ring-2"
+                          />
+                          <label htmlFor="square-aspect" className="text-white text-sm">Square Aspect</label>
+                        </div>
+                        
+                                                 <div className="ml-6 space-y-2">
+                           <div className="flex items-center space-x-3">
+                             <input
+                               type="radio"
+                               id="1024x1024"
+                               name="square-size"
+                               value="1024x1024"
+                               checked={imageSize === '1024x1024'}
+                               onChange={(e) => setImageSize(e.target.value)}
+                               className="w-4 h-4 text-violet-600 bg-gray-800 border-gray-700 focus:ring-violet-500 focus:ring-2"
+                             />
+                             <label htmlFor="1024x1024" className="text-gray-300 text-sm">1024×1024</label>
+                           </div>
+                           <div className="flex items-center space-x-3">
+                             <input
+                               type="radio"
+                               id="1536x1536"
+                               name="square-size"
+                               value="1536x1536"
+                               checked={imageSize === '1536x1536'}
+                               onChange={(e) => setImageSize(e.target.value)}
+                               className="w-4 h-4 text-violet-600 bg-gray-800 border-gray-700 focus:ring-violet-500 focus:ring-2"
+                             />
+                             <label htmlFor="1536x1536" className="text-gray-300 text-sm">1536×1536</label>
+                           </div>
+                         </div>
+
+                        <div className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            id="wide-aspect"
+                            checked={['1792x1024', '1344x768', '1216x832'].includes(imageSize)}
+                            onChange={(e) => {
+                              if (e.target.checked) setImageSize('1792x1024');
+                            }}
+                            className="w-4 h-4 text-violet-600 bg-gray-800 border-gray-700 rounded focus:ring-violet-500 focus:ring-2"
+                          />
+                          <label htmlFor="wide-aspect" className="text-white text-sm">Wide Aspect</label>
+                        </div>
+                        
+                                                 <div className="ml-6 space-y-2">
+                           <div className="flex items-center space-x-3">
+                             <input
+                               type="radio"
+                               id="1792x1024"
+                               name="wide-size"
+                               value="1792x1024"
+                               checked={imageSize === '1792x1024'}
+                               onChange={(e) => setImageSize(e.target.value)}
+                               className="w-4 h-4 text-violet-600 bg-gray-800 border-gray-700 focus:ring-violet-500 focus:ring-2"
+                             />
+                             <label htmlFor="1792x1024" className="text-gray-300 text-sm">1792×1024</label>
+                           </div>
+                           <div className="flex items-center space-x-3">
+                             <input
+                               type="radio"
+                               id="1344x768"
+                               name="wide-size"
+                               value="1344x768"
+                               checked={imageSize === '1344x768'}
+                               onChange={(e) => setImageSize(e.target.value)}
+                               className="w-4 h-4 text-violet-600 bg-gray-800 border-gray-700 focus:ring-violet-500 focus:ring-2"
+                             />
+                             <label htmlFor="1344x768" className="text-gray-300 text-sm">1344×768</label>
+                           </div>
+                           <div className="flex items-center space-x-3">
+                             <input
+                               type="radio"
+                               id="1216x832"
+                               name="wide-size"
+                               value="1216x832"
+                               checked={imageSize === '1216x832'}
+                               onChange={(e) => setImageSize(e.target.value)}
+                               className="w-4 h-4 text-violet-600 bg-gray-800 border-gray-700 focus:ring-violet-500 focus:ring-2"
+                             />
+                             <label htmlFor="1216x832" className="text-gray-300 text-sm">1216×832</label>
+                           </div>
+                         </div>
+                       </div>
                     </div>
 
                     {/* Quantity Selection */}
@@ -845,7 +952,14 @@ export default function Home() {
                     
                     <div className="space-y-4">
                       {isGenerating ? (
-                        <div className="aspect-square bg-gray-800/50 rounded-2xl flex items-center justify-center">
+                        <div 
+                          className="bg-gray-800/50 rounded-2xl flex items-center justify-center"
+                          style={{
+                            aspectRatio: imageSize.includes('x') ? 
+                              imageSize.split('x').map(Number).join('/') : 
+                              '1/1'
+                          }}
+                        >
                           <div className="text-center">
                             <div className="w-16 h-16 border-4 border-violet-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                             <p className="text-gray-400">生成中...</p>
@@ -857,7 +971,35 @@ export default function Home() {
                             <img
                               src={image}
                               alt={`Generated artwork ${index + 1}`}
-                              className="w-full aspect-square object-cover rounded-2xl"
+                              className="w-full object-contain rounded-2xl"
+                              style={{
+                                aspectRatio: imageSize.includes('x') ? 
+                                  imageSize.split('x').map(Number).join('/') : 
+                                  '1/1'
+                              }}
+                              onError={(e) => {
+                                console.error(`图片 ${index + 1} 加载失败:`, image);
+                                // 显示备用内容
+                                e.currentTarget.style.display = 'none';
+                                const parent = e.currentTarget.parentElement;
+                                if (parent && !parent.querySelector('.error-placeholder')) {
+                                  const errorDiv = document.createElement('div');
+                                  errorDiv.className = 'error-placeholder w-full bg-gray-800 rounded-2xl flex items-center justify-center';
+                                  errorDiv.style.aspectRatio = imageSize.includes('x') ? 
+                                    imageSize.split('x').map(Number).join('/') : 
+                                    '1/1';
+                                  errorDiv.innerHTML = `
+                                    <div class="text-center text-gray-400">
+                                      <svg class="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                      </svg>
+                                      <p class="text-sm">图片加载失败</p>
+                                      <p class="text-xs mt-1">请重新生成</p>
+                                    </div>
+                                  `;
+                                  parent.insertBefore(errorDiv, parent.firstChild);
+                                }
+                              }}
                             />
                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl flex items-center justify-center">
                               <div className="flex space-x-3">
@@ -865,25 +1007,61 @@ export default function Home() {
                                   onClick={async () => {
                                     try {
                                       setIsDownloading(true);
-                                      const response = await fetch(image);
+                                      console.log('开始下载图片:', image);
+                                      
+                                      // 创建代理下载API调用，避免跨域问题
+                                      const response = await fetch('/api/download-image', {
+                                        method: 'POST',
+                                        headers: {
+                                          'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                          imageUrl: image,
+                                          filename: `HandDraw-${selectedStyle}-${index + 1}.jpg`
+                                        }),
+                                      });
+
+                                      if (!response.ok) {
+                                        throw new Error('下载请求失败');
+                                      }
+
+                                      // 获取文件blob
                                       const blob = await response.blob();
+                                      
+                                      // 创建下载链接
                                       const url = window.URL.createObjectURL(blob);
                                       const a = document.createElement('a');
                                       a.style.display = 'none';
                                       a.href = url;
-                                      a.download = `HandDraw-${selectedStyle}-${index + 1}.png`;
+                                      a.download = `HandDraw-${selectedStyle}-${index + 1}.jpg`;
+                                      
+                                      // 添加到DOM并触发下载
                                       document.body.appendChild(a);
                                       a.click();
-                                      window.URL.revokeObjectURL(url);
-                                      document.body.removeChild(a);
+                                      
+                                      // 清理资源
+                                      setTimeout(() => {
+                                        window.URL.revokeObjectURL(url);
+                                        document.body.removeChild(a);
+                                      }, 100);
+                                      
+                                      console.log('下载完成');
                                     } catch (error) {
                                       console.error('下载失败:', error);
-                                      // 如果fetch失败，回退到原来的方法
-                                      const a = document.createElement('a');
-                                      a.href = image;
-                                      a.download = `HandDraw-${selectedStyle}-${index + 1}.png`;
-                                      a.target = '_blank';
-                                      a.click();
+                                      // 回退方案：直接使用图片URL
+                                      try {
+                                        const a = document.createElement('a');
+                                        a.style.display = 'none';
+                                        a.href = image;
+                                        a.download = `HandDraw-${selectedStyle}-${index + 1}.jpg`;
+                                        a.target = '_blank';
+                                        document.body.appendChild(a);
+                                        a.click();
+                                        setTimeout(() => document.body.removeChild(a), 100);
+                                      } catch (fallbackError) {
+                                        console.error('回退下载也失败:', fallbackError);
+                                        alert('下载失败，请右键点击图片选择"保存图片"');
+                                      }
                                     } finally {
                                       setIsDownloading(false);
                                     }
@@ -896,18 +1074,6 @@ export default function Home() {
                                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                   ) : (
                                     <Download className="w-5 h-5 text-white" />
-                                  )}
-                                </button>
-                                <button 
-                                  onClick={() => handlePsdExport(image, selectedStyle, prompt, setIsExporting, setExportError)}
-                                  disabled={isExporting}
-                                  className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors disabled:opacity-50"
-                                  title="导出PSD分层文件"
-                                >
-                                  {isExporting ? (
-                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                  ) : (
-                                    <Layers className="w-5 h-5 text-white" />
                                   )}
                                 </button>
                               </div>
@@ -923,13 +1089,6 @@ export default function Home() {
                         </div>
                       )}
                     </div>
-
-                    {/* PSD Export Error Display */}
-                    {exportError && (
-                      <div className="mt-4 p-3 bg-red-900/20 border border-red-700/30 rounded-xl text-red-400 text-sm">
-                        <strong>PSD导出失败:</strong> {exportError}
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -955,34 +1114,30 @@ export default function Home() {
                 {/* Free Plan */}
                 <div className="bg-gray-900/30 backdrop-blur-sm rounded-3xl p-8 border border-gray-800 hover:border-gray-600 transition-all duration-300">
                   <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-white mb-2">免费体验</h3>
-                    <div className="text-4xl font-bold text-gray-400 mb-2">¥0</div>
-                    <p className="text-gray-400">试用版本</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">Free Trial</h3>
+                    <div className="text-4xl font-bold text-gray-400 mb-2">$0</div>
+                    <p className="text-gray-400">Trial Version</p>
                   </div>
                   <ul className="space-y-4 mb-8">
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      每日 3 次生成
+                      3 generations per day
                     </li>
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      3 种基础手绘风格
+                      3 basic hand-drawn styles
                     </li>
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      512×512 分辨率
+                      512×512 resolution
                     </li>
                     <li className="flex items-center text-gray-400">
                       <X className="w-5 h-5 text-gray-600 mr-3" />
-                      PSD 分层导出
-                    </li>
-                    <li className="flex items-center text-gray-400">
-                      <X className="w-5 h-5 text-gray-600 mr-3" />
-                      商用许可证
+                      HD resolution export
                     </li>
                   </ul>
                   <button className="w-full py-3 border border-gray-600 text-gray-300 rounded-2xl font-bold hover:border-gray-500 hover:text-white transition-all duration-300">
-                    免费开始
+                    Start Free
                   </button>
                 </div>
 
@@ -990,130 +1145,73 @@ export default function Home() {
                 <div className="bg-gray-900/30 backdrop-blur-sm rounded-3xl p-8 border-2 border-violet-500 hover:border-violet-400 transition-all duration-300 relative">
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                     <span className="bg-gradient-to-r from-violet-600 to-cyan-500 text-white px-4 py-1 rounded-full text-sm font-bold">
-                      推荐
+                      Recommended
                     </span>
                   </div>
                   <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-white mb-2">专业版</h3>
-                    <div className="text-4xl font-bold text-white mb-2">¥69</div>
-                    <p className="text-gray-400">每月订阅</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">Professional</h3>
+                    <div className="text-4xl font-bold text-white mb-2">$9.9</div>
+                    <p className="text-gray-400">Monthly subscription</p>
                   </div>
                   <ul className="space-y-4 mb-8">
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      每月 500 次生成
+                      500 generations per month
                     </li>
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      11 种专业手绘风格
+                      10 professional hand-drawn styles
                     </li>
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      最高 2048×2048 分辨率
+                      Up to 2048×2048 resolution
                     </li>
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      PSD 分层导出
-                    </li>
-                    <li className="flex items-center text-gray-300">
-                      <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      商用许可证
+                      HD resolution export
                     </li>
                   </ul>
                   <button className="w-full py-3 bg-gradient-to-r from-violet-600 to-cyan-500 text-white rounded-2xl font-bold hover:shadow-2xl hover:shadow-violet-500/50 transition-all duration-300">
-                    开始专业创作
+                    Start Professional Creation
                   </button>
                 </div>
 
                 {/* Enterprise Plan */}
                 <div className="bg-gray-900/30 backdrop-blur-sm rounded-3xl p-8 border border-gray-800 hover:border-gray-600 transition-all duration-300">
                   <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-white mb-2">企业版</h3>
-                    <div className="text-4xl font-bold text-white mb-2">¥199</div>
-                    <p className="text-gray-400">每月订阅</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">Enterprise</h3>
+                    <div className="text-4xl font-bold text-white mb-2">$199</div>
+                    <p className="text-gray-400">Monthly subscription</p>
                   </div>
                   <ul className="space-y-4 mb-8">
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      无限次生成
+                      Unlimited generations
                     </li>
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      全部手绘风格 + 定制
+                      All hand-drawn styles + custom
                     </li>
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      4K 超高清分辨率
+                      4K ultra-high resolution
                     </li>
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      PSD + AI + SVG 多格式
+                      PNG + SVG multi-format
                     </li>
                     <li className="flex items-center text-gray-300">
                       <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
-                      API 接口访问
+                      API access
                     </li>
                   </ul>
                   <button className="w-full py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-2xl font-bold hover:shadow-2xl hover:shadow-orange-500/50 transition-all duration-300">
-                    联系销售
+                    Contact Sales
                   </button>
                 </div>
               </div>
 
-              {/* Feature Comparison */}
-              <div className="bg-gray-900/30 backdrop-blur-sm rounded-3xl p-8 border border-gray-800">
-                <h2 className="text-3xl font-bold text-white text-center mb-8">功能对比</h2>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-700">
-                        <th className="text-left py-4 text-white">功能特性</th>
-                        <th className="text-center py-4 text-gray-400">免费版</th>
-                        <th className="text-center py-4 text-violet-400">专业版</th>
-                        <th className="text-center py-4 text-orange-400">企业版</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-gray-300">
-                      <tr className="border-b border-gray-800">
-                        <td className="py-4">每月生成次数</td>
-                        <td className="text-center py-4">90 次</td>
-                        <td className="text-center py-4">500 次</td>
-                        <td className="text-center py-4">无限制</td>
-                      </tr>
-                      <tr className="border-b border-gray-800">
-                        <td className="py-4">手绘风格</td>
-                        <td className="text-center py-4">3 种</td>
-                        <td className="text-center py-4">11 种</td>
-                        <td className="text-center py-4">全部 + 定制</td>
-                      </tr>
-                      <tr className="border-b border-gray-800">
-                        <td className="py-4">最高分辨率</td>
-                        <td className="text-center py-4">512×512</td>
-                        <td className="text-center py-4">2048×2048</td>
-                        <td className="text-center py-4">4096×4096</td>
-                      </tr>
-                      <tr className="border-b border-gray-800">
-                        <td className="py-4">生成速度</td>
-                        <td className="text-center py-4">60 秒</td>
-                        <td className="text-center py-4">30 秒</td>
-                        <td className="text-center py-4">15 秒</td>
-                      </tr>
-                      <tr className="border-b border-gray-800">
-                        <td className="py-4">批量生成</td>
-                        <td className="text-center py-4">1 张</td>
-                        <td className="text-center py-4">4 张</td>
-                        <td className="text-center py-4">16 张</td>
-                      </tr>
-                      <tr>
-                        <td className="py-4">技术支持</td>
-                        <td className="text-center py-4">社区</td>
-                        <td className="text-center py-4">邮件</td>
-                        <td className="text-center py-4">专属客服</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              <HowItWorks />
             </div>
           </main>
         );
