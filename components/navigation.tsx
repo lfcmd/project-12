@@ -42,11 +42,11 @@ export default function Navigation({ currentLang, activeTab, setActiveTab, isMob
 
   const navLinks = [
     { key: 'home', label: currentLang.nav.home, href: '/' },
-    { key: 'features', label: 'Features', href: '#features-section' },
+    { key: 'features', label: 'Features', href: '/#features-section' },
     { key: 'generate', label: currentLang.nav.generate, href: '/?tab=generate' },
     { key: 'pricing', label: currentLang.nav.pricing, href: '/?tab=pricing' },
-    { key: 'faq', label: currentLang.nav.faq, href: '/?tab=faq' },
-    { key: 'about', label: currentLang.nav.about, href: '/?tab=about' }
+    { key: 'faq', label: currentLang.nav.faq, href: '/faq' },
+    { key: 'about', label: currentLang.nav.about, href: '/about' }
   ];
 
   function handleFeaturesClick() {
@@ -61,7 +61,7 @@ export default function Navigation({ currentLang, activeTab, setActiveTab, isMob
   }
 
   return (
-    <nav className="bg-black/95 backdrop-blur-xl border-b border-violet-500/20 sticky top-0 z-40 neural-connections">
+    <nav className="bg-black/95 backdrop-blur-xl border-b border-violet-500/20 sticky top-0 z-50 neural-connections">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-4">

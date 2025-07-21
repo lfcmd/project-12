@@ -18,6 +18,7 @@ export default function RootLayout({
       <body className="bg-black text-white">
         <main>{children}</main>
         <Footer />
+        <div id="portal-root"></div>
       </body>
     </html>
   );

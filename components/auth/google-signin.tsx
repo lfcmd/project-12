@@ -12,20 +12,37 @@ export function GoogleSignIn() {
   )
 
   const handleGoogleSignIn = async () => {
+    console.log('Attempting Google Sign-In...');
     setIsLoading(true)
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${location.origin}/api/auth/callback`,
+          queryParams: {
+            prompt: 'select_account', // 强制弹出 Google 账户选择界面
+          }
         },
       })
       
+      console.log('Supabase OAuth response:', { data, error });
+
       if (error) {
-        console.error('登录错误:', error)
+        console.error('Google Sign-In Error from Supabase:', error);
+        alert(`登录时出错: ${error.message}`);
+      } else if (data.url) {
+        // 手动重定向到 Google 登录页面
+        console.log('Redirecting manually to:', data.url);
+        window.location.href = data.url;
+      } else {
+        console.error('No URL returned from Supabase for OAuth.');
+        alert('无法获取登录页面，请稍后重试。');
       }
     } catch (error) {
-      console.error('登录失败:', error)
+      console.error('Failed to initiate Google Sign-In:', error)
+      if (error instanceof Error) {
+        alert(`登录失败: ${error.message}`);
+      }
     } finally {
       setIsLoading(false)
     }

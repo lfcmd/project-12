@@ -157,63 +157,6 @@ function HowItWorks() {
   );
 }
 
-function FaqSection() {
-  const { faq } = t;
-  return (
-    <section className="py-20">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-pink-400 via-rose-400 to-orange-400 bg-clip-text text-transparent">{faq.title}</span>
-          </h2>
-          <p className="text-xl text-gray-400">{faq.subtitle}</p>
-        </div>
-        <div className="space-y-8">
-          {faq.questions.map((item, index) => (
-            <div key={index} className="bg-gray-900/30 backdrop-blur-sm p-6 rounded-2xl border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">{item.q}</h3>
-              <p className="text-gray-400 leading-relaxed">{item.a}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function AboutSection() {
-  const { about } = t;
-  return (
-    <section className="py-20 bg-black text-white">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400 bg-clip-text text-transparent">{about.title}</span>
-          </h2>
-          <p className="text-xl text-gray-400">{about.subtitle}</p>
-        </div>
-        <div className="space-y-10 text-lg text-gray-300 leading-relaxed">
-          <div className="bg-gray-900/30 p-8 rounded-2xl border border-gray-800">
-            <h3 className="text-2xl font-bold text-cyan-400 mb-4">{about.missionTitle}</h3>
-            <p>{about.missionText}</p>
-          </div>
-          <div className="bg-gray-900/30 p-8 rounded-2xl border border-gray-800">
-            <h3 className="text-2xl font-bold text-cyan-400 mb-4">{about.techTitle}</h3>
-            <p>{about.techText}</p>
-          </div>
-          <div className="bg-gray-900/30 p-8 rounded-2xl border border-gray-800">
-            <h3 className="text-2xl font-bold text-cyan-400 mb-4">{about.forCreatorsTitle}</h3>
-            <p>{about.forCreatorsText}</p>
-          </div>
-          <div className="text-center mt-16">
-            <p className="text-xl text-cyan-400 font-semibold">{about.communityCall}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function FeaturesSection() {
   const features = [
     {
@@ -555,18 +498,6 @@ export default function HomeContent({ user }: HomeContentProps) {
         );
       case 'pricing':
         return <PricingSection />;
-      case 'faq':
-        return (
-          <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white py-20">
-            <FaqSection />
-          </div>
-        );
-      case 'about':
-        return (
-          <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white py-20">
-            <AboutSection />
-          </div>
-        );
       default: return null;
     }
   };
