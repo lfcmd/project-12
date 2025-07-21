@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'v3.fal.media',
+        port: '',
+        pathname: '/files/**',
+      },
+    ],
   },
   /* config options here */
   // 允许提供静态HTML文件
