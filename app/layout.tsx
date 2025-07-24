@@ -7,7 +7,10 @@ export const metadata: Metadata = {
   title: "HandDraw.AI - 专业手绘风格AI生成平台",
   description: 'AI-powered hand-drawn style image generator',
 };
-
+      <head>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4704669548339622"
+     crossorigin="anonymous"></script>
+      </head>
 export default function RootLayout({
   children,
 }: {
